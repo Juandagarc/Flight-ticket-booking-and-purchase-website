@@ -1,0 +1,25 @@
+# Dependencias y entornos
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Builds y cachés
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+.pytest_cache/
+.ruff_cache/
+next-env.d.ts
+
+# Pruebas
+test-results/
+playwright-report/
+blob-report/
+
+# Configuración local
+.env
+.env.local
+!.env.example
+.DS_Store
