@@ -33,6 +33,10 @@ def monedero_de(db: Session, cliente_id: uuid.UUID, bloquear: bool = False) -> M
     return monedero
 
 
+def _pesos(valor) -> str:
+    return "$" + f"{valor:,.0f}".replace(",", ".")
+
+
 def mover_saldo(
     db: Session, monedero: Monedero, tipo: str, monto: Decimal, descripcion: str
 ) -> MovimientoMonedero:
@@ -42,7 +46,7 @@ def mover_saldo(
         raise ErrorNegocio(
             402,
             "SALDO_INSUFICIENTE",
-            f"Saldo insuficiente: tienes ${monedero.saldo:,.0f} y se necesitan ${-monto:,.0f}.",
+            f"Saldo insuficiente: tienes {_pesos(monedero.saldo)} y se necesitan {_pesos(-monto)}.",
         )
     monedero.saldo = nuevo
     movimiento = MovimientoMonedero(

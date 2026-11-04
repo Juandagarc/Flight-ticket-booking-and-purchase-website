@@ -3,7 +3,7 @@
 Proyecto del Laboratorio de Software 2026-02 · Universidad Tecnológica de Pereira.
 Equipo: Juan David García Arce, Juan David Cortés, Diego Alejandro Ascencio. Docente y cliente: Cesar Augusto Jaramillo.
 
-Estado: **iteración 1 (HU-001 a HU-009) construida y probada**. El detalle de lo entregado y de cómo se probó cada criterio de aceptación está en [`docs/iteracion-1.md`](docs/iteracion-1.md).
+Estado: **iteraciones 1 (HU-001 a HU-009) y 2 (HU-010 a HU-018) construidas y probadas**. El detalle de cada una y de cómo se probó cada criterio de aceptación está en [`docs/iteracion-1.md`](docs/iteracion-1.md) y [`docs/iteracion-2.md`](docs/iteracion-2.md).
 
 ## Stack (Anexo B de los requisitos)
 
