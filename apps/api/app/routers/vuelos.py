@@ -1,6 +1,6 @@
 """HU-006 Programación (CU-06), HU-007 Edición (CU-08) y HU-008 Búsqueda de vuelos (CU-20, CU-21)."""
 
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from typing import Annotated
 
@@ -9,7 +9,7 @@ from sqlalchemy import exists, func, select
 from sqlalchemy.orm import Session, aliased
 
 from app.db import get_db
-from app.deps import requiere_administrador, usuario_opcional
+from app.deps import requiere_administrador, reservas_al_dia, usuario_opcional
 from app.errores import ErrorNegocio
 from app.models import ActividadUsuario, Ciudad, Rol, Tarifa, Usuario, Vuelo
 from app.schemas import (
@@ -106,7 +106,7 @@ def programar_vuelo(
     return a_salida(vuelo, {})
 
 
-@router.get("/vuelos/gestion", response_model=list[VueloSalida])
+@router.get("/vuelos/gestion", response_model=list[VueloSalida], dependencies=[Depends(reservas_al_dia)])
 def listar_para_gestion(
     estado: str | None = None,
     _: Usuario = Depends(requiere_administrador),
@@ -119,7 +119,7 @@ def listar_para_gestion(
     return _salidas(db, list(db.scalars(consulta).unique()))
 
 
-@router.put("/vuelos/{codigo}", response_model=VueloSalida)
+@router.put("/vuelos/{codigo}", response_model=VueloSalida, dependencies=[Depends(reservas_al_dia)])
 def editar_vuelo(
     codigo: str,
     datos: VueloEdicion,
@@ -171,7 +171,7 @@ def editar_vuelo(
 # --- Búsqueda pública ------------------------------------------------------------
 
 
-@router.get("/vuelos/buscar", response_model=ResultadoBusqueda)
+@router.get("/vuelos/buscar", response_model=ResultadoBusqueda, dependencies=[Depends(reservas_al_dia)])
 def buscar_vuelos(
     origen: str | None = None,
     destino: str | None = None,
@@ -248,7 +248,28 @@ def buscar_vuelos(
     return ResultadoBusqueda(total=len(resultados), vuelos=resultados)
 
 
-@router.get("/vuelos/{codigo}", response_model=VueloSalida)
+@router.get("/vuelos/{codigo}", response_model=VueloSalida, dependencies=[Depends(reservas_al_dia)])
 def ver_vuelo(codigo: str, db: Session = Depends(get_db)):
     vuelo = _vuelo_o_404(db, codigo)
     return _salidas(db, [vuelo])[0]
+
+
+@router.get(
+    "/vuelos/{codigo}/regresos", response_model=list[VueloSalida], dependencies=[Depends(reservas_al_dia)]
+)
+def vuelos_de_regreso(codigo: str, db: Session = Depends(get_db)):
+    """RF-26: vuelos para el trayecto completo; van del destino al origen y salen después de la llegada."""
+    ida = _vuelo_o_404(db, codigo)
+    llegada = ida.fecha_hora_salida + timedelta(minutes=ida.duracion_min)
+    vuelos = db.scalars(
+        select(Vuelo)
+        .where(
+            Vuelo.origen == ida.destino,
+            Vuelo.destino == ida.origen,
+            Vuelo.estado == "PROGRAMADO",
+            Vuelo.fecha_hora_salida > max(llegada, datetime.now(UTC)),
+        )
+        .order_by(Vuelo.fecha_hora_salida)
+        .limit(30)
+    ).unique()
+    return _salidas(db, list(vuelos))

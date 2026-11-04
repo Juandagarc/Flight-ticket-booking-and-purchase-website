@@ -18,6 +18,7 @@ URL_BASE = os.environ.get(
     "TEST_DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/tiquetes_test"
 )
 os.environ["DATABASE_URL"] = URL_BASE
+os.environ["TAREAS_PERIODICAS"] = "false"
 os.environ.setdefault("JWT_SECRET", "secreto-de-pruebas-con-longitud-suficiente-32b")
 
 from alembic.config import Config  # noqa: E402
@@ -30,6 +31,8 @@ from app.main import app  # noqa: E402
 from app.models import Rol, Usuario  # noqa: E402
 from app.security import cifrar_contrasena  # noqa: E402
 from app.services import correo  # noqa: E402
+
+pytest_plugins = ["tests.ayudas_compras"]
 
 ROOT_PASS = "root-pruebas"
 ADMIN_PASS = "admin-pruebas"

@@ -15,6 +15,9 @@ const ENLACES: Record<Rol | "VISITANTE", { href: string; texto: string }[]> = {
     { href: "/vuelos", texto: "Buscar vuelos" },
     { href: "/noticias", texto: "Noticias" },
     { href: "/cliente", texto: "Mi cuenta" },
+    { href: "/cliente/carrito", texto: "Carrito" },
+    { href: "/cliente/reservas", texto: "Mis reservas" },
+    { href: "/cliente/monedero", texto: "Monedero" },
     { href: "/perfil", texto: "Perfil" },
   ],
   ADMINISTRADOR: [

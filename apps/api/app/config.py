@@ -25,6 +25,11 @@ class Settings(BaseSettings):
 
     cors_origenes: str = "http://localhost:3000"
 
+    # Reservas sin pago (RF-14): horas que se sostienen y cada cuánto se revisan las vencidas.
+    horas_reserva: int = 24
+    revisar_vencidas_cada_seg: int = 60
+    tareas_periodicas: bool = True
+
     # Correo (RNF-03). Sin SMTP_HOST los correos se escriben en el log.
     smtp_host: str | None = None
     smtp_port: int = 587

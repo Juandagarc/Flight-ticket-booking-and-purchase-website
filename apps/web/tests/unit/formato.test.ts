@@ -25,3 +25,9 @@ describe("formato", () => {
     expect(f.diasDeDiferencia("2026-11-03T08:00:00", "2026-11-03T09:00:00")).toBe(0);
   });
 });
+
+describe("iteración 2 · fechas con zona", () => {
+  it("muestra la hora de Colombia", () => {
+    expect(f.momento("2026-11-04T17:30:00Z")).toBe("4 nov 2026 · 12:30");
+  });
+});
