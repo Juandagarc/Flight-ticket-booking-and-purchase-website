@@ -52,3 +52,15 @@ def requiere_rol(*roles: str) -> Callable[..., Usuario]:
 requiere_cliente = requiere_rol(Rol.CLIENTE)
 requiere_administrador = requiere_rol(Rol.ADMINISTRADOR)
 requiere_root = requiere_rol(Rol.ROOT)
+
+
+def reservas_al_dia(db: Session = Depends(get_db)) -> None:
+    """Libera las reservas vencidas antes de atender la solicitud (HU-018).
+
+    La tarea periódica de la API ya lo hace cada minuto; esto garantiza que ninguna consulta
+    vea como ocupada una silla de una reserva que venció entre dos revisiones.
+    """
+    from app.services.reservas import liberar_vencidas
+
+    if liberar_vencidas(db):
+        db.commit()

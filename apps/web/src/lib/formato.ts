@@ -45,3 +45,36 @@ export function diasDeDiferencia(salidaLocal: string, llegadaLocal: string): num
   const db = Date.UTC(b.anio, b.mes - 1, b.dia);
   return Math.round((db - da) / 86_400_000);
 }
+
+const momentoColombia = new Intl.DateTimeFormat("es-CO", {
+  timeZone: "America/Bogota",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
+/** Fechas con zona (creación, vencimiento, pagos) en hora de Colombia. */
+export function momento(iso: string): string {
+  const p = Object.fromEntries(momentoColombia.formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return `${p.day} ${String(p.month).replace(".", "")} ${p.year} · ${p.hour}:${p.minute}`;
+}
+
+export const ESTADO_RESERVA: Record<string, string> = {
+  RESERVADA: "Reservada",
+  PAGADA: "Pagada",
+  CANCELADA: "Cancelada",
+  VENCIDA: "Vencida",
+};
+
+export const CLASE: Record<string, string> = { PRIMERA: "Primera", ECONOMICA: "Económica" };
+
+export const POSICION: Record<string, string> = { VENTANA: "Ventana", CENTRO: "Centro", PASILLO: "Pasillo" };
+
+export const MOVIMIENTO: Record<string, string> = {
+  AJUSTE_MANUAL: "Ajuste manual",
+  DEBITO_COMPRA: "Compra",
+  ABONO_REEMBOLSO: "Reembolso",
+};

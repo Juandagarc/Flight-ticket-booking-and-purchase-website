@@ -12,7 +12,7 @@ concurrency:
 jobs:
   api:
     name: API · lint y pruebas
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:16-alpine
@@ -38,7 +38,7 @@ jobs:
 
   web:
     name: Web · lint, tipos, pruebas y build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -54,7 +54,7 @@ jobs:
 
   e2e:
     name: Extremo a extremo (Playwright)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [api, web]
     services:
       postgres:
@@ -91,7 +91,7 @@ jobs:
 
   docker:
     name: Imágenes Docker
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [api, web]
     steps:
       - uses: actions/checkout@v4

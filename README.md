@@ -3,7 +3,7 @@
 Proyecto del Laboratorio de Software 2026-02 · Universidad Tecnológica de Pereira.
 Equipo: Juan David García Arce, Juan David Cortés, Diego Alejandro Ascencio. Docente y cliente: Cesar Augusto Jaramillo.
 
-Estado: **iteración 1 (HU-001 a HU-009) construida y probada**. El detalle de lo entregado y de cómo se probó cada criterio de aceptación está en [`docs/iteracion-1.md`](docs/iteracion-1.md).
+Estado: **iteraciones 1 (HU-001 a HU-009) y 2 (HU-010 a HU-018) construidas y probadas**. El detalle de cada una y de cómo se probó cada criterio de aceptación está en [`docs/iteracion-1.md`](docs/iteracion-1.md) y [`docs/iteracion-2.md`](docs/iteracion-2.md).
 
 ## Stack (Anexo B de los requisitos)
 
@@ -32,6 +32,36 @@ docker compose up --build
 - Web: http://localhost:3000
 - API y documentación interactiva: http://localhost:8000/docs
 - Usuario root: `root` con la contraseña de `ROOT_PASSWORD` (se aplica la primera vez que arranca la API).
+
+## Datos de prueba
+
+Con Docker se cargan solos la primera vez (variable `DATOS_DEMO=1`). En desarrollo local:
+
+```bash
+cd apps/api
+uv run python -m app.datos_demo              # carga si la base está vacía
+uv run python -m app.datos_demo --reiniciar  # borra todo y vuelve a cargar
+```
+
+| Rol | Usuario | Contraseña |
+| --- | --- | --- |
+| Root | `root` | la de `ROOT_PASSWORD` (`Root2026` si no está definida) |
+| Administrador | `admin` | `Admin2026` |
+| Cliente con historial | `ana.lopez` | `Cliente2026` |
+| Cliente nuevo, sin saldo | `carlos.ruiz` | `Cliente2026` |
+
+Se crean 17 vuelos nacionales e internacionales, que quedan publicados en Noticias. `ana.lopez` tiene
+búsquedas, $10.000.000 cargados en el monedero, dos tarjetas y reservas en todos los estados:
+
+- compra de ida y vuelta con un menor;
+- compra internacional;
+- compra cancelada con reembolso;
+- reserva cancelada;
+- reserva vencida;
+- dos reservas en el carrito;
+- una compra en un vuelo que sale 50 minutos después de la carga, que ya no se puede cancelar.
+
+`carlos.ruiz` no tiene saldo, así que sirve para mostrar el rechazo por saldo insuficiente.
 
 ## Desarrollo local
 
