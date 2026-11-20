@@ -11,5 +11,5 @@ COPY . .
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
-# Aplica las migraciones y arranca la API.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# Aplica las migraciones, carga los datos de prueba si DATOS_DEMO=1 y arranca la API.
+CMD ["sh", "-c", "alembic upgrade head && if [ \"$DATOS_DEMO\" = 1 ]; then python -m app.datos_demo; fi && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

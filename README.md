@@ -33,6 +33,36 @@ docker compose up --build
 - API y documentación interactiva: http://localhost:8000/docs
 - Usuario root: `root` con la contraseña de `ROOT_PASSWORD` (se aplica la primera vez que arranca la API).
 
+## Datos de prueba
+
+Con Docker se cargan solos la primera vez (variable `DATOS_DEMO=1`). En desarrollo local:
+
+```bash
+cd apps/api
+uv run python -m app.datos_demo              # carga si la base está vacía
+uv run python -m app.datos_demo --reiniciar  # borra todo y vuelve a cargar
+```
+
+| Rol | Usuario | Contraseña |
+| --- | --- | --- |
+| Root | `root` | la de `ROOT_PASSWORD` (`Root2026` si no está definida) |
+| Administrador | `admin` | `Admin2026` |
+| Cliente con historial | `ana.lopez` | `Cliente2026` |
+| Cliente nuevo, sin saldo | `carlos.ruiz` | `Cliente2026` |
+
+Se crean 17 vuelos nacionales e internacionales, que quedan publicados en Noticias. `ana.lopez` tiene
+búsquedas, $10.000.000 cargados en el monedero, dos tarjetas y reservas en todos los estados:
+
+- compra de ida y vuelta con un menor;
+- compra internacional;
+- compra cancelada con reembolso;
+- reserva cancelada;
+- reserva vencida;
+- dos reservas en el carrito;
+- una compra en un vuelo que sale 50 minutos después de la carga, que ya no se puede cancelar.
+
+`carlos.ruiz` no tiene saldo, así que sirve para mostrar el rechazo por saldo insuficiente.
+
 ## Desarrollo local
 
 Requisitos: Node 22 con pnpm 10, Python 3.13 con [uv](https://docs.astral.sh/uv/) y un PostgreSQL 16.
